@@ -1,0 +1,1 @@
+DATABASE_NAME = 'BB_news'

@@ -3,5 +3,7 @@ pandas
 scikit-learn
 matplotlib
 Flask
+pymongo[srv]
+certifi==2024.2.2 
 
 -e .
