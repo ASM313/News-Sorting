@@ -1,1 +1,2 @@
 DATABASE_NAME = 'BB_news'
+COLLECTION_NAME = 'news'
