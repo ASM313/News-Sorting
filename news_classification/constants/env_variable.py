@@ -1,0 +1,1 @@
+MONGODB_URI_KEY="mongodb+srv://atiq:atiq@cluster0.l7j3weq.mongodb.net/"
