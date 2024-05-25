@@ -5,5 +5,13 @@ matplotlib
 Flask
 pymongo[srv]
 certifi==2024.2.2 
+from_root
+PyYAML
+scipy
+dill
+imblearn
+xgboost
+gunicorn
+pypi-json==0.4.0
 
 -e .

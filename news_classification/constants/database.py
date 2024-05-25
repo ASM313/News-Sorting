@@ -1,1 +1,2 @@
-DATABASE_NAME = 'BB_news'
+DATABASE_NAME = 'BBC_News'
+COLLECTION_NAME = 'News_Article'

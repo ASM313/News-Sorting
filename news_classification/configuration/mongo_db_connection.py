@@ -12,10 +12,12 @@ class MongoDBClient:
         try:
 
             if MongoDBClient.client is None:
-                               
-                #mongo_db_url = "mongodb+srv://asm07:asm07@cluster0.l7j3weq.mongodb.net/"
-                mongo_db_url  = os.getenv(MONGODB_URI_KEY)
-                MongoDBClient.client = pymongo.MongoClient(mongo_db_url, tlsCAFile=ca)
+                mongo_db_url = os.getenv(MONGODB_URI_KEY)
+                print(mongo_db_url)
+                if "localhost" in mongo_db_url:
+                    MongoDBClient.client = pymongo.MongoClient(mongo_db_url) 
+                else:
+                    MongoDBClient.client = pymongo.MongoClient(mongo_db_url, tlsCAFile=ca)
             self.client = MongoDBClient.client
             self.database = self.client[database_name]
             self.database_name = database_name
