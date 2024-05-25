@@ -1,9 +1,8 @@
 columns:
-  - ArticleId  :   int 
-  - Text       :   object
-  - Category   :   object
+  Text            : object
+  Category        : object
+  num_characters  : int64 
+  num_words       : int64 
+  num_sentences   : int64 
 
-numerical_columns:
-  
-drop_columns:
-  - ArticleId : int
+
