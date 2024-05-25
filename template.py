@@ -20,6 +20,8 @@ list_of_files = [
     f"{project_name}/constants/s3_bucket.py",
     f"{project_name}/constants/application.py",
     f"{project_name}/constants/env_variable.py",
+    f"{project_name}/constants/training_pipeline/__init__.py",
+    # f"{project_name}/constants/training_pipeline/",
     f"{project_name}/entity/__init__.py",
     f"{project_name}/entity/config_entity.py",
     f"{project_name}/entity/artifact_entity.py",
