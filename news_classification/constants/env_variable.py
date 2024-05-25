@@ -1,4 +1,4 @@
-MONGODB_URI_KEY = "mongodb+srv://atiq:atiq@cluster0.l7j3weq.mongodb.net/"
+MONGODB_URI_KEY = "MONGO_DB_URL"
 
 AWS_ACCESS_KEY_ID_ENV_KEY = "AWS_ACCESS_KEY_ID"
 

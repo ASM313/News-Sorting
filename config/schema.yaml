@@ -1,0 +1,9 @@
+columns:
+  - ArticleId  :   int 
+  - Text       :   object
+  - Category   :   object
+
+numerical_columns:
+  
+drop_columns:
+  - ArticleId : int

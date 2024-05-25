@@ -33,6 +33,7 @@ list_of_files = [
     f"{project_name}/ml/__init__.py",
     f"{project_name}/__init__.py",
     f"{project_name}/utils/__init__.py",
+    f"{project_name}/utils/main_utils.py",
     f"{project_name}/data_access/__init__.py",
     f"{project_name}/data_access/news_data.py",
     f"{project_name}/cloud_storage/__init__.py",
