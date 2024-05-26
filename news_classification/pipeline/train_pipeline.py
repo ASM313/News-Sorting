@@ -1,19 +1,19 @@
-from news_classification.entity.config_entity import TrainingPipelineConfig,DataIngestionConfig#,DataValidationConfig,DataTransformationConfig
-from news_classification.entity.artifact_entity import DataIngestionArtifact#, DataValidationArtifact,DataTransformationArtifact
+from news_classification.entity.config_entity import TrainingPipelineConfig,DataIngestionConfig,DataValidationConfig #,DataTransformationConfig
+from news_classification.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact #,DataTransformationArtifact
 # from sensor.entity.artifact_entity import ModelEvaluationArtifact,ModelPusherArtifact,ModelTrainerArtifact
 # from sensor.entity.config_entity import ModelPusherConfig,ModelEvaluationConfig,ModelTrainerConfig
 from news_classification.exception import NewsException
 import sys,os
 from news_classification.logger import logging
 from news_classification.components.data_ingestion import DataIngestion
-# from sensor.components.data_validation import DataValidation
-# from sensor.components.data_transformation import DataTransformation
-# from sensor.components.model_trainer import ModelTrainer
-# from sensor.components.model_evaluation import ModelEvaluation
-# from sensor.components.model_pusher import ModelPusher
-# from sensor.cloud_storage.s3_syncer import S3Sync
-# from sensor.constant.s3_bucket import TRAINING_BUCKET_NAME
-# from sensor.constant.training_pipeline import SAVED_MODEL_DIR
+from news_classification.components.data_validation import DataValidation
+# from news_classification.components.data_transformation import DataTransformation
+# from news_classification.components.model_trainer import ModelTrainer
+# from news_classification.components.model_evaluation import ModelEvaluation
+# from news_classification.components.model_pusher import ModelPusher
+# from news_classification.cloud_storage.s3_syncer import S3Sync
+# from news_classification.constant.s3_bucket import TRAINING_BUCKET_NAME
+# from news_classification.constant.training_pipeline import SAVED_MODEL_DIR
 
 class TrainPipeline:
     # is_pipeline_running=False
@@ -32,16 +32,16 @@ class TrainPipeline:
         except  Exception as e:
             raise  NewsException(e,sys)
 
-    # def start_data_validaton(self,data_ingestion_artifact:DataIngestionArtifact)->DataValidationArtifact:
-    #     try:
-    #         data_validation_config = DataValidationConfig(training_pipeline_config=self.training_pipeline_config)
-    #         data_validation = DataValidation(data_ingestion_artifact=data_ingestion_artifact,
-    #         data_validation_config = data_validation_config
-    #         )
-    #         data_validation_artifact = data_validation.initiate_data_validation()
-    #         return data_validation_artifact
-    #     except  Exception as e:
-    #         raise  SensorException(e,sys)
+    def start_data_validaton(self,data_ingestion_artifact:DataIngestionArtifact)->DataValidationArtifact:
+        try:
+            data_validation_config = DataValidationConfig(training_pipeline_config=self.training_pipeline_config)
+            data_validation = DataValidation(data_ingestion_artifact=data_ingestion_artifact,
+            data_validation_config = data_validation_config
+            )
+            data_validation_artifact = data_validation.initiate_data_validation()
+            return data_validation_artifact
+        except  Exception as e:
+            raise  NewsException(e,sys)
 
     # def start_data_transformation(self,data_validation_artifact:DataValidationArtifact):
     #     try:
@@ -103,7 +103,7 @@ class TrainPipeline:
             # TrainPipeline.is_pipeline_running=True
 
             data_ingestion_artifact:DataIngestionArtifact = self.start_data_ingestion()
-            # data_validation_artifact=self.start_data_validaton(data_ingestion_artifact=data_ingestion_artifact)
+            data_validation_artifact=self.start_data_validaton(data_ingestion_artifact=data_ingestion_artifact)
             # data_transformation_artifact = self.start_data_transformation(data_validation_artifact=data_validation_artifact)
             # model_trainer_artifact = self.start_model_trainer(data_transformation_artifact)
             # model_eval_artifact = self.start_model_evaluation(data_validation_artifact, model_trainer_artifact)
