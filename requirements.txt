@@ -13,5 +13,7 @@ imblearn
 xgboost
 gunicorn
 pypi-json==0.4.0
+distutils
+scipy
 
 -e .
