@@ -13,7 +13,7 @@ from news_classification.entity.config_entity import DataTransformationConfig
 from news_classification.exception import NewsException
 from news_classification.logger import logging
 from news_classification.ml.model.estimator import TargetValueMapping
-from news_classification.utils.main_utils import save_numpy_array_data, save_object
+from news_classification.utils.main_utils import save_csv_data
 
 import re
 import string
@@ -22,7 +22,7 @@ import nltk
 from nltk.corpus import stopwords
 nltk.download('stopwords')
 from sklearn.model_selection import train_test_split
-
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
 class DataTransformation:
     def __init__(self,data_validation_artifact: DataValidationArtifact, 
@@ -72,13 +72,13 @@ class DataTransformation:
 
         except Exception as e:
             raise NewsException(e, sys) from e
-    
+
     def initiate_data_transformation(self,) -> DataTransformationArtifact:
         try:
             
             train_df = DataTransformation.read_data(self.data_validation_artifact.valid_train_file_path)
             test_df = DataTransformation.read_data(self.data_validation_artifact.valid_test_file_path)
-            
+
             label = LabelEncoder()
 
             # Label Encoding for target variables
@@ -95,17 +95,14 @@ class DataTransformation:
 
             train_arr = train_df
             test_arr = test_df
-         
+
             #save numpy array data
-            save_numpy_array_data( self.data_transformation_config.transformed_train_file_path, array=train_arr, )
-            save_numpy_array_data( self.data_transformation_config.transformed_test_file_path,array=test_arr,)
-            
-            
+            transformed_data= pd.concat([train_arr, test_arr])
+            save_csv_data(self.data_transformation_config.transformed_data_file_path,data=transformed_data)
+
          #preparing artifact
             data_transformation_artifact = DataTransformationArtifact(
-                transformed_object_file_path="",
-                transformed_train_file_path=self.data_transformation_config.transformed_train_file_path,
-                transformed_test_file_path=self.data_transformation_config.transformed_test_file_path,
+                transformed_data_file_path=self.data_transformation_config.transformed_data_file_path
             )
             logging.info(f"Data transformation artifact: {data_transformation_artifact}")
             return data_transformation_artifact

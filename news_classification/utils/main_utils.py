@@ -5,7 +5,7 @@ import os,sys
 import numpy as np
 import dill
 from sklearn.base import BaseEstimator, TransformerMixin
-
+import pandas as pd
 import re
 import nltk
 import contractions
@@ -84,37 +84,17 @@ def load_object(file_path: str, ) -> object:
     except Exception as e:
         raise NewsException(e, sys) from e
 
+def save_csv_data(file_path: str, data: pd.DataFrame):
+    """
+    Save dataframe to csv file
+    file_path: str location of file to save
+    data: pandas dataframe to save
+    """
+    try:
+        dir_path = os.path.dirname(file_path)
+        os.makedirs(dir_path, exist_ok=True)
+        with open(file_path, "wb") as file_obj:
+             data.to_csv(file_obj, header=True, index=False)
+    except Exception as e:
+        raise NewsException(e, sys) from e
 
-# Download NLTK data
-nltk.download('punkt')
-nltk.download('stopwords')   
-stop_words = set(stopwords.words('english'))
-
-class NLTKPreprocessor(BaseEstimator, TransformerMixin):
-    def __init__(self, stopwords=True, porter=True):
-        self.stopwords = stop_words 
-        self.porter = PorterStemmer() 
-
-    def data_cleaning(self, words):
-
-        try:
-            logging.info("Entered into the data_cleaning function")
-            # Let's apply stemming and stopwords on the data
-            stemmer = nltk.SnowballStemmer("english")
-            stopword = set(stopwords.words('english'))
-            words = str(words).lower()
-            words = re.sub('\[.*?\]', '', words)
-            words = re.sub('https?://\S+|www\.\S+', '', words)
-            words = re.sub('<.*?>+', '', words)
-            words = re.sub('[%s]' % re.escape(string.punctuation), '', words)
-            words = re.sub('\n', '', words)
-            words = re.sub('\w*\d\w*', '', words)
-            words = [word for word in words.split(' ') if words not in stopword]
-            words=" ".join(words)
-            words = [stemmer.stem(word) for word in words.split(' ')]
-            words=" ".join(words)
-            logging.info("Exited the data_cleaning function")
-            return words 
-
-        except Exception as e:
-            raise CustomException(e, sys) from e
