@@ -9,10 +9,9 @@ FILE_NAME:str='news.csv'
 TRAIN_FILE_NAME:str='train.csv'
 TEST_FILE_NAME:str='test.csv'
 
-PREPROCESSING_OBJECT_FILE_NAME='preprocessing.pkl'
-VECTORING_OBJECT_FILE_NAME='vector.pkl'
-
+PREPROCSSING_OBJECT_FILE_NAME='preprocessing.pkl'
 MODEL_FILE_NAME='model.pkl'
+
 SAVED_MODEL_DIR = os.path.join("saved_models")
 
 SCHEMA_FILE_PATH=os.path.join("config","schema.yaml")
