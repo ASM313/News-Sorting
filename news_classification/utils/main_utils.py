@@ -4,6 +4,15 @@ from news_classification.logger import logging
 import os,sys
 import numpy as np
 import dill
+from sklearn.base import BaseEstimator, TransformerMixin
+import pandas as pd
+import re
+import nltk
+import contractions
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import PorterStemmer
+
 
 def read_yaml_file(file_path: str) -> dict:
     try:
@@ -66,6 +75,7 @@ def save_object(file_path: str, obj: object) -> None:
 
 
 def load_object(file_path: str, ) -> object:
+
     try:
         if not os.path.exists(file_path):
             raise Exception(f"The file: {file_path} is not exists")
@@ -73,3 +83,18 @@ def load_object(file_path: str, ) -> object:
             return dill.load(file_obj)
     except Exception as e:
         raise NewsException(e, sys) from e
+
+def save_csv_data(file_path: str, data: pd.DataFrame):
+    """
+    Save dataframe to csv file
+    file_path: str location of file to save
+    data: pandas dataframe to save
+    """
+    try:
+        dir_path = os.path.dirname(file_path)
+        os.makedirs(dir_path, exist_ok=True)
+        with open(file_path, "wb") as file_obj:
+             data.to_csv(file_obj, header=True, index=False)
+    except Exception as e:
+        raise NewsException(e, sys) from e
+
