@@ -12,7 +12,7 @@ from news_classification.entity.artifact_entity import (
 from news_classification.entity.config_entity import DataTransformationConfig
 from news_classification.exception import NewsException
 from news_classification.logger import logging
-from news_classification.ml.model.estimator import TargetValueMapping
+# from news_classification.ml.model.estimator import TargetValueMapping
 from news_classification.utils.main_utils import save_csv_data, save_object
 
 import re
@@ -52,7 +52,7 @@ class DataTransformation:
     def text_cleaning(self, words):
 
         try:
-            logging.info("Entered into the text_cleaning function")
+            
             # Let's apply stemming and stopwords on the data
             stemmer = nltk.SnowballStemmer("english")
             stopword = set(stopwords.words('english'))
@@ -67,7 +67,6 @@ class DataTransformation:
             words=" ".join(words)
             words = [stemmer.stem(word) for word in words.split(' ')]
             words=" ".join(words)
-            logging.info("Exited the text_cleaning function")
             return words 
 
         except Exception as e:
@@ -80,7 +79,7 @@ class DataTransformation:
             test_df = DataTransformation.read_data(self.data_validation_artifact.valid_test_file_path)
 
             label = LabelEncoder()
-            tfidf = TfidfVectorizer()
+            tfidf = TfidfVectorizer(max_features=5000)
             
             # Label Encoding for target variables
 
@@ -98,13 +97,13 @@ class DataTransformation:
             
             #testing dataframe
             # input_feature_test_df = test_df.drop(columns=[TARGET_COLUMN], axis=1)
-            logging.info("Vectorizing train data")
+            logging.info("Vectorizing test data")
             
             test_df['Text']=test_df['Text'].apply(self.text_cleaning)
             test_df[TARGET_COLUMN] = label.transform(test_df[TARGET_COLUMN])
             test_text_vectors = preprocessor_object.transform(test_df['Text']).toarray()
 
-            print("Shape of train data vectors: ",test_text_vectors.shape)
+            print("Shape of test data vectors: ",test_text_vectors.shape)
             
             save_object( self.data_transformation_config.transformed_object_file_path, preprocessor_object)            
 

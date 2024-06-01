@@ -1,32 +1,20 @@
 from news_classification.constants.training_pipeline import SAVED_MODEL_DIR ,MODEL_FILE_NAME
 import os
-from sklearn.feature_extraction.text import TfidfVectorizer
-class TargetValueMapping:
-    def __init__(self):
-        # self.neg: int = 0
-        # self.pos: int = 1
-        self.sport         : int = 0 
-        self.business      : int = 1
-        self.politics      : int = 2
-        self.entertainment : int = 3
-        self.tech          : int = 4
-
-    def to_dict(self):
-        return self.__dict__
-
-    def reverse_mapping(self):
-        mapping_response = self.to_dict()
-        return dict(zip(mapping_response.values(), mapping_response.keys()))
-
-tfidf = TfidfVectorizer()
+import re
+import string
+import pandas as pd
+import nltk
+from nltk.corpus import stopwords
+nltk.download('stopwords')
 
 # Write a code to train model and check the accuracy.
 
 
 class NewsModel:
 
-    def __init__(self,model):
+    def __init__(self,preprocessor,model):
         try:
+            self.preprocessor = preprocessor
             self.model = model
         except Exception as e:
             raise e
@@ -49,10 +37,10 @@ class NewsModel:
             words=" ".join(words)
             return words 
 
-    def predict(self, x):
+    def predict(self,x):
         try:
-            # x_cleaned = self.text_cleaning(x)
-            # x_transformed = `
+            cleaned_text = self.text_cleaning(x)
+            x_transform = self.preprocessor.transform(cleaned_text)
             y_hat = self.model.predict(x_transform)
             return y_hat
         except Exception as e:

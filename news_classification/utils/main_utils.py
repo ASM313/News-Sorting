@@ -4,14 +4,8 @@ from news_classification.logger import logging
 import os,sys
 import numpy as np
 import dill
-from sklearn.base import BaseEstimator, TransformerMixin
 import pandas as pd
-import re
-import nltk
-import contractions
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-from nltk.stem import PorterStemmer
+
 
 
 def read_yaml_file(file_path: str) -> dict:
