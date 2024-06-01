@@ -1,6 +1,6 @@
 from news_classification.constants.training_pipeline import SAVED_MODEL_DIR ,MODEL_FILE_NAME
 import os
-
+from sklearn.feature_extraction.text import TfidfVectorizer
 class TargetValueMapping:
     def __init__(self):
         # self.neg: int = 0
@@ -18,23 +18,41 @@ class TargetValueMapping:
         mapping_response = self.to_dict()
         return dict(zip(mapping_response.values(), mapping_response.keys()))
 
-
-
+tfidf = TfidfVectorizer()
 
 # Write a code to train model and check the accuracy.
 
+
 class NewsModel:
 
-    def __init__(self,preprocessor,model):
+    def __init__(self,model):
         try:
-            self.preprocessor = preprocessor
             self.model = model
         except Exception as e:
             raise e
+
+    def text_cleaning(words):
     
-    def predict(self,x):
+            # Let's apply stemming and stopwords on the data
+            stemmer = nltk.SnowballStemmer("english")
+            stopword = set(stopwords.words('english'))
+            words = str(words).lower()
+            words = re.sub('\[.*?\]', '', words)
+            words = re.sub('https?://\S+|www\.\S+', '', words)
+            words = re.sub('<.*?>+', '', words)
+            words = re.sub('[%s]' % re.escape(string.punctuation), '', words)
+            words = re.sub('\n', '', words)
+            words = re.sub('\w*\d\w*', '', words)
+            words = [word for word in words.split(' ') if words not in stopword]
+            words=" ".join(words)
+            words = [stemmer.stem(word) for word in words.split(' ')]
+            words=" ".join(words)
+            return words 
+
+    def predict(self, x):
         try:
-            x_transform = self.preprocessor.transform(x)
+            # x_cleaned = self.text_cleaning(x)
+            # x_transformed = `
             y_hat = self.model.predict(x_transform)
             return y_hat
         except Exception as e:

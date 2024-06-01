@@ -1,14 +1,14 @@
 from news_classification.entity.config_entity import TrainingPipelineConfig,DataIngestionConfig,DataValidationConfig, DataTransformationConfig
 from news_classification.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact, DataTransformationArtifact
-# from sensor.entity.artifact_entity import ModelEvaluationArtifact,ModelPusherArtifact,ModelTrainerArtifact
-# from sensor.entity.config_entity import ModelPusherConfig,ModelEvaluationConfig,ModelTrainerConfig
+from news_classification.entity.artifact_entity import ModelTrainerArtifact#,ModelEvaluationArtifact,ModelPusherArtifact
+from news_classification.entity.config_entity import ModelTrainerConfig#,ModelPusherConfig,ModelEvaluationConfig
 from news_classification.exception import NewsException
 import sys,os
 from news_classification.logger import logging
 from news_classification.components.data_ingestion import DataIngestion
 from news_classification.components.data_validation import DataValidation
 from news_classification.components.data_transforamation import DataTransformation
-# from news_classification.components.model_trainer import ModelTrainer
+from news_classification.components.model_trainer import ModelTrainer
 # from news_classification.components.model_evaluation import ModelEvaluation
 # from news_classification.components.model_pusher import ModelPusher
 # from news_classification.cloud_storage.s3_syncer import S3Sync
@@ -61,7 +61,7 @@ class TrainPipeline:
     #         model_trainer_artifact = model_trainer.initiate_model_trainer()
     #         return model_trainer_artifact
     #     except  Exception as e:
-    #         raise  SensorException(e,sys)
+    #         raise  NewsException(e,sys)
 
     # def start_model_evaluation(self,data_validation_artifact:DataValidationArtifact,
     #                              model_trainer_artifact:ModelTrainerArtifact,

@@ -1,5 +1,5 @@
 import sys
-
+import dill
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
@@ -13,7 +13,7 @@ from news_classification.entity.config_entity import DataTransformationConfig
 from news_classification.exception import NewsException
 from news_classification.logger import logging
 from news_classification.ml.model.estimator import TargetValueMapping
-from news_classification.utils.main_utils import save_csv_data
+from news_classification.utils.main_utils import save_csv_data, save_object
 
 import re
 import string
@@ -80,29 +80,44 @@ class DataTransformation:
             test_df = DataTransformation.read_data(self.data_validation_artifact.valid_test_file_path)
 
             label = LabelEncoder()
-
+            tfidf = TfidfVectorizer()
             # Label Encoding for target variables
 
             #training dataframe
             # input_feature_train_df = train_df.drop(columns=[TARGET_COLUMN], axis=1)
+            logging.info("Vectorizing train data")
+
             train_df['Text']=train_df['Text'].apply(self.text_cleaning) 
             train_df[TARGET_COLUMN] = label.fit_transform(train_df[TARGET_COLUMN])
 
+            preprocessor_object = tfidf.fit(train_df['Text'])
+            train_text_vectors = preprocessor_object.transform(train_df['Text']).toarray()
+
+            print("Shape of train data vectors: ",train_text_vectors.shape)
+            
             #testing dataframe
             # input_feature_test_df = test_df.drop(columns=[TARGET_COLUMN], axis=1)
+            logging.info("Vectorizing train data")
+            
             test_df['Text']=test_df['Text'].apply(self.text_cleaning)
             test_df[TARGET_COLUMN] = label.transform(test_df[TARGET_COLUMN])
+            test_text_vectors = preprocessor_object.transform(test_df['Text']).toarray()
+
+            print("Shape of train data vectors: ",test_text_vectors.shape)
+            
+            save_object( self.data_transformation_config.transformed_object_file_path, preprocessor_object)            
+
 
             train_arr = train_df
             test_arr = test_df
 
-            #save numpy array data
+        #     #save numpy array data
             transformed_data= pd.concat([train_arr, test_arr])
             save_csv_data(self.data_transformation_config.transformed_data_file_path,data=transformed_data)
 
          #preparing artifact
             data_transformation_artifact = DataTransformationArtifact(
-                transformed_data_file_path=self.data_transformation_config.transformed_data_file_path
+                transformed_data_file_path=self.data_transformation_config.transformed_data_file_path,                transformed_object_file_path=self.data_transformation_config.transformed_object_file_path
             )
             logging.info(f"Data transformation artifact: {data_transformation_artifact}")
             return data_transformation_artifact
