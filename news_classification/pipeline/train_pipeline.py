@@ -54,14 +54,14 @@ class TrainPipeline:
         except  Exception as e:
             raise  NewsException(e,sys)
     
-    # def start_model_trainer(self,data_transformation_artifact:DataTransformationArtifact):
-    #     try:
-    #         model_trainer_config = ModelTrainerConfig(training_pipeline_config=self.training_pipeline_config)
-    #         model_trainer = ModelTrainer(model_trainer_config, data_transformation_artifact)
-    #         model_trainer_artifact = model_trainer.initiate_model_trainer()
-    #         return model_trainer_artifact
-    #     except  Exception as e:
-    #         raise  NewsException(e,sys)
+    def start_model_trainer(self,data_transformation_artifact:DataTransformationArtifact):
+        try:
+            model_trainer_config = ModelTrainerConfig(training_pipeline_config=self.training_pipeline_config)
+            model_trainer = ModelTrainer(model_trainer_config, data_transformation_artifact)
+            model_trainer_artifact = model_trainer.initiate_model_trainer()
+            return model_trainer_artifact
+        except  Exception as e:
+            raise  NewsException(e,sys)
 
     # def start_model_evaluation(self,data_validation_artifact:DataValidationArtifact,
     #                              model_trainer_artifact:ModelTrainerArtifact,
@@ -107,7 +107,7 @@ class TrainPipeline:
 
             data_transformation_artifact = self.start_data_transformation(data_validation_artifact=data_validation_artifact)
             
-            # model_trainer_artifact = self.start_model_trainer(data_transformation_artifact)
+            model_trainer_artifact = self.start_model_trainer(data_transformation_artifact)
             
             # model_eval_artifact = self.start_model_evaluation(data_validation_artifact, model_trainer_artifact)
             
