@@ -53,8 +53,10 @@ class DataTransformationConfig:
         
         self.transformed_data_file_path: str = os.path.join( self.data_transformation_dir,training_pipeline.DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR)
         
+        self.transformed_object_file_path: str = os.path.join( self.data_transformation_dir, training_pipeline.DATA_TRANSFORMATION_TRANSFORMED_OBJECT_DIR,
+            training_pipeline.PREPROCSSING_OBJECT_FILE_NAME,)
 
-"""
+
 class ModelTrainerConfig:
 
 
@@ -93,5 +95,3 @@ class ModelPusherConfig:
             f"{timestamp}",
             training_pipeline.MODEL_FILE_NAME)
 
-
-"""
