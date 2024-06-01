@@ -11,6 +11,7 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.model_selection import train_test_split
 import pandas as pd
 from news_classification.constants.training_pipeline import TARGET_COLUMN
+from sklearn.metrics import accuracy_score, precision_score, f1_score, recall_score
 
 
 class ModelTrainer:
@@ -61,6 +62,11 @@ class ModelTrainer:
             y_train_pred = model.predict(x_train)     
             
             y_test_pred = model.predict(x_test)
+
+            print("Accuracy: ",accuracy_score(y_test_pred, y_test))
+            print("Precision: ",precision_score(y_test, y_test_pred, average='weighted'))
+            # print("Recall: ",recall_score(y_test_pred, y_test))
+            # print("F1-score: ",f1_score(y_test_pred, y_test))
      
             model_dir_path = os.path.dirname(self.model_trainer_config.trained_model_file_path)
             os.makedirs(model_dir_path,exist_ok=True)
