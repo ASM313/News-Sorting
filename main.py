@@ -19,6 +19,7 @@ if __name__ == '__main__':
 
     training_pipeline = TrainPipeline()
     training_pipeline.run_pipeline()
+    
     # training_pipeline_config = TrainingPipelineConfig()
     # data_ingestion_config = DataIngestionConfig(
     #                         training_pipeline_config=training_pipeline_config

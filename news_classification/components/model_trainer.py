@@ -12,7 +12,7 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 from news_classification.constants.training_pipeline import TARGET_COLUMN
 from sklearn.metrics import accuracy_score, precision_score, f1_score, recall_score
-
+from news_classification.ml.metric.classification_metric import get_classification_score
 
 class ModelTrainer:
 
@@ -59,9 +59,15 @@ class ModelTrainer:
             x_train, x_test, y_train, y_test = train_test_split(X, target, test_size = 0.2, random_state=42)
 
             model = self.train_model(x_train, y_train)
-            y_train_pred = model.predict(x_train)     
+            y_train_pred = model.predict(x_train)
+            classification_train_metric =  get_classification_score(y_true=y_train, y_pred=y_train_pred)
+            
+            if classification_train_metric.f1_score<=self.model_trainer_config.expected_accuracy:
+                raise Exception("Trained model is not good to provide expected accuracy")
             
             y_test_pred = model.predict(x_test)
+            classification_test_metric = get_classification_score(y_true=y_test, y_pred=y_test_pred)
+
 
             print("Accuracy: ",accuracy_score(y_test_pred, y_test))
             print("Precision: ",precision_score(y_test, y_test_pred, average='weighted'))
@@ -75,7 +81,7 @@ class ModelTrainer:
 
             # Model trainer artifact
 
-            model_trainer_artifact = ModelTrainerArtifact(trained_model_file_path=self.model_trainer_config.trained_model_file_path)
+            model_trainer_artifact = ModelTrainerArtifact(trained_model_file_path=self.model_trainer_config.trained_model_file_path, train_metric_artifact=classification_train_metric,test_metric_artifact=classification_test_metric)
 
             logging.info(f"Model trainer artifact: {model_trainer_artifact}")
             

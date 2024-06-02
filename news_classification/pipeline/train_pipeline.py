@@ -1,7 +1,7 @@
 from news_classification.entity.config_entity import TrainingPipelineConfig,DataIngestionConfig,DataValidationConfig, DataTransformationConfig
 from news_classification.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact, DataTransformationArtifact
-from news_classification.entity.artifact_entity import ModelTrainerArtifact#,ModelEvaluationArtifact,ModelPusherArtifact
-from news_classification.entity.config_entity import ModelTrainerConfig#,ModelPusherConfig,ModelEvaluationConfig
+from news_classification.entity.artifact_entity import ModelTrainerArtifact,ModelEvaluationArtifact,ModelPusherArtifact
+from news_classification.entity.config_entity import ModelTrainerConfig,ModelPusherConfig,ModelEvaluationConfig
 from news_classification.exception import NewsException
 import sys,os
 from news_classification.logger import logging
@@ -9,7 +9,7 @@ from news_classification.components.data_ingestion import DataIngestion
 from news_classification.components.data_validation import DataValidation
 from news_classification.components.data_transforamation import DataTransformation
 from news_classification.components.model_trainer import ModelTrainer
-# from news_classification.components.model_evaluation import ModelEvaluation
+from news_classification.components.model_evaluation import ModelEvaluation
 # from news_classification.components.model_pusher import ModelPusher
 # from news_classification.cloud_storage.s3_syncer import S3Sync
 # from news_classification.constant.s3_bucket import TRAINING_BUCKET_NAME
@@ -63,16 +63,14 @@ class TrainPipeline:
         except  Exception as e:
             raise  NewsException(e,sys)
 
-    # def start_model_evaluation(self,data_validation_artifact:DataValidationArtifact,
-    #                              model_trainer_artifact:ModelTrainerArtifact,
-    #                             ):
-    #     try:
-    #         model_eval_config = ModelEvaluationConfig(self.training_pipeline_config)
-    #         model_eval = ModelEvaluation(model_eval_config, data_validation_artifact, model_trainer_artifact)
-    #         model_eval_artifact = model_eval.initiate_model_evaluation()
-    #         return model_eval_artifact
-    #     except  Exception as e:
-    #         raise  SensorException(e,sys)
+    def start_model_evaluation(self,data_transformation_artifact:DataTransformationArtifact,model_trainer_artifact:ModelTrainerArtifact):
+        try:
+            model_eval_config = ModelEvaluationConfig(self.training_pipeline_config)
+            model_eval = ModelEvaluation(model_eval_config, data_transformation_artifact, model_trainer_artifact)
+            model_eval_artifact = model_eval.initiate_model_evaluation()
+            return model_eval_artifact
+        except  Exception as e:
+            raise  NewsException(e,sys)
 
     # def start_model_pusher(self,model_eval_artifact:ModelEvaluationArtifact):
     #     try:
@@ -109,12 +107,12 @@ class TrainPipeline:
             
             model_trainer_artifact = self.start_model_trainer(data_transformation_artifact)
             
-            # model_eval_artifact = self.start_model_evaluation(data_validation_artifact, model_trainer_artifact)
+            model_eval_artifact = self.start_model_evaluation(data_transformation_artifact, model_trainer_artifact)
             
-            # if not model_eval_artifact.is_model_accepted:
-            #     # raise Exception("Trained model is not better than the best model")
-            #     message = "Trained model is not better than the best model"
-            #     return message
+            if not model_eval_artifact.is_model_accepted:
+                # raise Exception("Trained model is not better than the best model")
+                message = "Trained model is not better than the best model"
+                return message
             
             # model_pusher_artifact = self.start_model_pusher(model_eval_artifact)
             
