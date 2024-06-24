@@ -10,7 +10,7 @@ from news_classification.components.data_validation import DataValidation
 from news_classification.components.data_transforamation import DataTransformation
 from news_classification.components.model_trainer import ModelTrainer
 from news_classification.components.model_evaluation import ModelEvaluation
-# from news_classification.components.model_pusher import ModelPusher
+from news_classification.components.model_pusher import ModelPusher
 # from news_classification.cloud_storage.s3_syncer import S3Sync
 # from news_classification.constant.s3_bucket import TRAINING_BUCKET_NAME
 from news_classification.constants.training_pipeline import SAVED_MODEL_DIR
@@ -72,14 +72,14 @@ class TrainPipeline:
         except  Exception as e:
             raise  NewsException(e,sys)
 
-    # def start_model_pusher(self,model_eval_artifact:ModelEvaluationArtifact):
-    #     try:
-    #         model_pusher_config = ModelPusherConfig(training_pipeline_config=self.training_pipeline_config)
-    #         model_pusher = ModelPusher(model_pusher_config, model_eval_artifact)
-    #         model_pusher_artifact = model_pusher.initiate_model_pusher()
-    #         return model_pusher_artifact
-    #     except  Exception as e:
-    #         raise  SensorException(e,sys)
+    def start_model_pusher(self,model_eval_artifact:ModelEvaluationArtifact):
+        try:
+            model_pusher_config = ModelPusherConfig(training_pipeline_config=self.training_pipeline_config)
+            model_pusher = ModelPusher(model_pusher_config, model_eval_artifact)
+            model_pusher_artifact = model_pusher.initiate_model_pusher()
+            return model_pusher_artifact
+        except  Exception as e:
+            raise  NewsException(e,sys)
 
     # def sync_artifact_dir_to_s3(self):
     #     try:
@@ -109,12 +109,8 @@ class TrainPipeline:
             
             model_eval_artifact = self.start_model_evaluation(data_transformation_artifact, model_trainer_artifact)
             
-            if not model_eval_artifact.is_model_accepted:
-                # raise Exception("Trained model is not better than the best model")
-                message = "Trained model is not better than the best model"
-                return message
             
-            # model_pusher_artifact = self.start_model_pusher(model_eval_artifact)
+            model_pusher_artifact = self.start_model_pusher(model_eval_artifact)
             
             # TrainPipeline.is_pipeline_running=False
             # self.sync_artifact_dir_to_s3()

@@ -9,7 +9,6 @@ nltk.download('stopwords')
 
 # Write a code to train model and check the accuracy.
 
-
 class NewsModel:
 
     def __init__(self,preprocessor,model):
