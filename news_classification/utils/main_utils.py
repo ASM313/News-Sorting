@@ -5,8 +5,11 @@ import os,sys
 import numpy as np
 import dill
 import pandas as pd
-
-
+import string
+import nltk
+from nltk.corpus import stopwords
+nltk.download('stopwords')
+import re
 
 def read_yaml_file(file_path: str) -> dict:
     try:
@@ -14,7 +17,6 @@ def read_yaml_file(file_path: str) -> dict:
             return yaml.safe_load(yaml_file)
     except Exception as e:
         raise NewsException(e, sys) 
-
 
 def write_yaml_file(file_path: str, content: object, replace: bool = False) -> None:
     try:
@@ -26,8 +28,6 @@ def write_yaml_file(file_path: str, content: object, replace: bool = False) -> N
             yaml.dump(content, file)
     except Exception as e:
         raise NewsException(e, sys)
-
-
 
 def save_numpy_array_data(file_path: str, array: np.array):
     """
@@ -43,7 +43,6 @@ def save_numpy_array_data(file_path: str, array: np.array):
     except Exception as e:
         raise NewsException(e, sys) from e
 
-
 def load_numpy_array_data(file_path: str) -> np.array:
     """
     load numpy array data from file
@@ -56,7 +55,6 @@ def load_numpy_array_data(file_path: str) -> np.array:
     except Exception as e:
         raise NewsException(e, sys) from e
 
-
 def save_object(file_path: str, obj: object) -> None:
     try:
         logging.info("Entered the save_object method of MainUtils class")
@@ -66,7 +64,6 @@ def save_object(file_path: str, obj: object) -> None:
         logging.info("Exited the save_object method of MainUtils class")
     except Exception as e:
         raise NewsException(e, sys) from e
-
 
 def load_object(file_path: str, ) -> object:
 
@@ -92,3 +89,20 @@ def save_csv_data(file_path: str, data: pd.DataFrame):
     except Exception as e:
         raise NewsException(e, sys) from e
 
+def text_cleaning(words):
+    
+            # Let's apply stemming and stopwords on the data
+            stemmer = nltk.SnowballStemmer("english")
+            stopword = set(stopwords.words('english'))
+            words = str(words).lower()
+            words = re.sub('\[.*?\]', '', words)
+            words = re.sub('https?://\S+|www\.\S+', '', words)
+            words = re.sub('<.*?>+', '', words)
+            words = re.sub('[%s]' % re.escape(string.punctuation), '', words)
+            words = re.sub('\n', '', words)
+            words = re.sub('\w*\d\w*', '', words)
+            words = [word for word in words.split(' ') if words not in stopword]
+            words=" ".join(words)
+            words = [stemmer.stem(word) for word in words.split(' ')]
+            words=" ".join(words)
+            return words 

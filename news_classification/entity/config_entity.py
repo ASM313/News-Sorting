@@ -53,6 +53,8 @@ class DataTransformationConfig:
         self.transformed_object_file_path: str = os.path.join( self.data_transformation_dir, training_pipeline.DATA_TRANSFORMATION_TRANSFORMED_OBJECT_DIR,
             training_pipeline.PREPROCSSING_OBJECT_FILE_NAME,)
 
+        # self.transformed_object_file_path=os.path.join(training_pipeline.PREPROCSSING_OBJECT_FILE_NAME)
+
 class ModelTrainerConfig:
 
 

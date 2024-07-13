@@ -70,34 +70,39 @@ class ModelEvaluation:
             latest_model = load_object(file_path=latest_model_path)
             train_model = load_object(file_path=train_model_file_path)
             
-            y_trained_pred = train_model.predict(x_test)
-            y_latest_pred  =latest_model.predict(x_test)
+            y_trained_pred=[]
+            y_latest_pred=[]
 
-            trained_metric = get_classification_score(y_test, y_trained_pred)
-            latest_metric = get_classification_score(y_test, y_latest_pred)
+            for item in x_test:
+                y_trained_pred.append(train_model.predict(item))
+                y_latest_pred.append(latest_model.predict(item))
 
-            improved_accuracy = trained_metric.f1_score-latest_metric.f1_score
-            if self.model_eval_config.change_threshold < improved_accuracy:
-                #0.02 < 0.03
-                is_model_accepted=True
-            else:
-                is_model_accepted=False
+            # trained_metric = get_classification_score(y_test, y_trained_pred)
+            # latest_metric = get_classification_score(y_test, y_latest_pred)
+
+            # improved_accuracy = trained_metric.f1_score-latest_metric.f1_score
+            # if self.model_eval_config.change_threshold < improved_accuracy:
+            #     #0.02 < 0.03
+            #     is_model_accepted=True
+            # else:
+            #     is_model_accepted=False
 
             
-            model_evaluation_artifact = ModelEvaluationArtifact(
-                    is_model_accepted=is_model_accepted, 
-                    improved_accuracy=improved_accuracy, 
-                    best_model_path=latest_model_path, 
-                    trained_model_path=train_model_file_path, 
-                    train_model_metric_artifact=trained_metric, 
-                    best_model_metric_artifact=latest_metric)
+            # model_evaluation_artifact = ModelEvaluationArtifact(
+            #         is_model_accepted=is_model_accepted, 
+            #         improved_accuracy=improved_accuracy, 
+            #         best_model_path=latest_model_path, 
+            #         trained_model_path=train_model_file_path, 
+            #         train_model_metric_artifact=trained_metric, 
+            #         best_model_metric_artifact=latest_metric)
 
-            model_eval_report = model_evaluation_artifact.__dict__
+            # model_eval_report = model_evaluation_artifact.__dict__
 
-            #save the report
-            write_yaml_file(self.model_eval_config.report_file_path, model_eval_report)
-            logging.info(f"Model evaluation artifact: {model_evaluation_artifact}")
-            return model_evaluation_artifact
+            # #save the report
+            # write_yaml_file(self.model_eval_config.report_file_path, model_eval_report)
+            # logging.info(f"Model evaluation artifact: {model_evaluation_artifact}")
+            # return model_evaluation_artifact
+            return 1
             
         except Exception as e:
             raise NewsException(e,sys)

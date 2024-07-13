@@ -38,12 +38,22 @@ class NewsModel:
 
     def predict(self,x):
         try:
+            
             cleaned_text = self.text_cleaning(x)
             x_transform = self.preprocessor.transform(cleaned_text)
             y_hat = self.model.predict(x_transform)
             return y_hat
         except Exception as e:
             raise e
+
+    def predictions(self,x):
+        try:
+            
+            y_hat = self.model.predict(x)
+            return y_hat
+        except Exception as e:
+            raise e    
+    
     
 
 class ModelResolver:

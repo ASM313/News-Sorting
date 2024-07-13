@@ -1,4 +1,4 @@
-import sys
+import os,sys
 import dill
 import numpy as np
 import pandas as pd
@@ -14,7 +14,7 @@ from news_classification.exception import NewsException
 from news_classification.logger import logging
 # from news_classification.ml.model.estimator import TargetValueMapping
 from news_classification.utils.main_utils import save_csv_data, save_object
-
+from news_classification.constants.training_pipeline import SAVED_MODEL_DIR
 import re
 import string
 import pandas as pd
@@ -37,7 +37,7 @@ class DataTransformation:
             self.data_transformation_config = data_transformation_config
 
         except Exception as e:
-            raise SensorException(e, sys)
+            raise NewsException(e, sys)
 
 
     @staticmethod
@@ -92,7 +92,7 @@ class DataTransformation:
 
             preprocessor_object = tfidf.fit(train_df['Text'])
             train_text_vectors = preprocessor_object.transform(train_df['Text']).toarray()
-
+            dill.dump(label, open("label.pkl", "wb"))
             print("Shape of train data vectors: ",train_text_vectors.shape)
             
             #testing dataframe
@@ -106,7 +106,7 @@ class DataTransformation:
             print("Shape of test data vectors: ",test_text_vectors.shape)
             
             save_object( self.data_transformation_config.transformed_object_file_path, preprocessor_object)            
-
+            dill.dump(preprocessor_object, open("preprocessor.pkl", "wb"))
 
             train_arr = train_df
             test_arr = test_df
@@ -117,8 +117,7 @@ class DataTransformation:
 
          #preparing artifact
             data_transformation_artifact = DataTransformationArtifact(
-                transformed_data_file_path=self.data_transformation_config.transformed_data_file_path,                transformed_object_file_path=self.data_transformation_config.transformed_object_file_path
-            )
+            transformed_data_file_path=self.data_transformation_config.transformed_data_file_path,transformed_object_file_path=self.data_transformation_config.transformed_object_file_path)
             logging.info(f"Data transformation artifact: {data_transformation_artifact}")
             return data_transformation_artifact
 

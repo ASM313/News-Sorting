@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>News Classification</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  </head>
+  <body style="background-color: rgb(179, 202, 157);">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark border-bottom border-body" data-bs-theme="dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">BBC News</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/">About </a>
+              </li>
+              
+            </ul>
+            
+          </div>
+        </div>
+    </nav>
+
+
+    <h1 class="mt-2 mb-3 text-center">BBC News Classification</h1>     
+    
+    <div class="container p-2">
+          
+        <div class="row">
+          
+          <!-- Take a .csv file for prediction -->
+          <div class="col-sm-6">
+            <div class="card text-bg-success mb-3 align-self-center" style="max-width: 100rem;">
+              <div class="card-header">Predictor</div>
+              <div class="card-body">
+                <h5 class="card-title">Make predictions</h5>
+                <form action="/predict" method="post" enctype="multipart/form-data">
+                  <div class="mb-3">
+                    <label for="user_msg" class="form-label">Enter your news</label>
+                    <div class="form-group">
+                      <input type="text" name="user_msg" id="user_msg">
+                    </div>
+                    <!-- For making predictions -->
+                    <button type="submit" class="btn btn-info">Classify</button>
+              
+                  </div>    
+                </form>                   
+              </div>
+            </div>
+                
+          </div>
+        </div>
+        <h1>Predicted class is <span style="color: rgb(48, 157, 185);">{{prediction}}</span></h1>
+       
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+  </body>
+</html>

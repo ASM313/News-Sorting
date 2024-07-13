@@ -10,6 +10,7 @@ from news_classification.utils.main_utils import save_object,load_object
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.model_selection import train_test_split
 import pandas as pd
+import dill
 from news_classification.constants.training_pipeline import TARGET_COLUMN
 from sklearn.metrics import accuracy_score, precision_score, f1_score, recall_score
 from news_classification.ml.metric.classification_metric import get_classification_score
@@ -57,6 +58,7 @@ class ModelTrainer:
             X = preprocessor.transform(features['Text']).toarray()
 
             x_train, x_test, y_train, y_test = train_test_split(X, target, test_size = 0.2, random_state=42)
+            print(x_train)
 
             model = self.train_model(x_train, y_train)
             y_train_pred = model.predict(x_train)
@@ -68,7 +70,6 @@ class ModelTrainer:
             y_test_pred = model.predict(x_test)
             classification_test_metric = get_classification_score(y_true=y_test, y_pred=y_test_pred)
 
-
             print("Accuracy: ",accuracy_score(y_test_pred, y_test))
             print("Precision: ",precision_score(y_test, y_test_pred, average='weighted'))
             # print("Recall: ",recall_score(y_test_pred, y_test))
@@ -78,6 +79,8 @@ class ModelTrainer:
             os.makedirs(model_dir_path,exist_ok=True)
             news_model = NewsModel(preprocessor=preprocessor, model=model)
             save_object(self.model_trainer_config.trained_model_file_path, obj=news_model)
+            
+            dill.dump(news_model, open("model.pkl","wb"))
 
             # Model trainer artifact
 

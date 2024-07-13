@@ -3,7 +3,6 @@ from news_classification.entity.artifact_entity import DataIngestionArtifact, Da
 from news_classification.entity.artifact_entity import ModelTrainerArtifact,ModelEvaluationArtifact,ModelPusherArtifact
 from news_classification.entity.config_entity import ModelTrainerConfig,ModelPusherConfig,ModelEvaluationConfig
 from news_classification.exception import NewsException
-import sys,os
 from news_classification.logger import logging
 from news_classification.components.data_ingestion import DataIngestion
 from news_classification.components.data_validation import DataValidation
@@ -11,9 +10,10 @@ from news_classification.components.data_transforamation import DataTransformati
 from news_classification.components.model_trainer import ModelTrainer
 from news_classification.components.model_evaluation import ModelEvaluation
 from news_classification.components.model_pusher import ModelPusher
+from news_classification.constants.training_pipeline import SAVED_MODEL_DIR
 # from news_classification.cloud_storage.s3_syncer import S3Sync
 # from news_classification.constant.s3_bucket import TRAINING_BUCKET_NAME
-from news_classification.constants.training_pipeline import SAVED_MODEL_DIR
+import sys,os
 
 class TrainPipeline:
     # is_pipeline_running=False
@@ -72,14 +72,14 @@ class TrainPipeline:
         except  Exception as e:
             raise  NewsException(e,sys)
 
-    def start_model_pusher(self,model_eval_artifact:ModelEvaluationArtifact):
-        try:
-            model_pusher_config = ModelPusherConfig(training_pipeline_config=self.training_pipeline_config)
-            model_pusher = ModelPusher(model_pusher_config, model_eval_artifact)
-            model_pusher_artifact = model_pusher.initiate_model_pusher()
-            return model_pusher_artifact
-        except  Exception as e:
-            raise  NewsException(e,sys)
+    # def start_model_pusher(self,model_eval_artifact:ModelEvaluationArtifact):
+    #     try:
+    #         model_pusher_config = ModelPusherConfig(training_pipeline_config=self.training_pipeline_config)
+    #         model_pusher = ModelPusher(model_pusher_config, model_eval_artifact)
+    #         model_pusher_artifact = model_pusher.initiate_model_pusher()
+    #         return model_pusher_artifact
+    #     except  Exception as e:
+    #         raise  NewsException(e,sys)
 
     # def sync_artifact_dir_to_s3(self):
     #     try:
@@ -105,12 +105,10 @@ class TrainPipeline:
 
             data_transformation_artifact = self.start_data_transformation(data_validation_artifact=data_validation_artifact)
             
-            model_trainer_artifact = self.start_model_trainer(data_transformation_artifact)
+            model_trainer_artifact = self.start_model_trainer(data_transformation_artifact)    
+            # model_eval_artifact = self.start_model_evaluation(data_transformation_artifact, model_trainer_artifact)
             
-            model_eval_artifact = self.start_model_evaluation(data_transformation_artifact, model_trainer_artifact)
-            
-            
-            model_pusher_artifact = self.start_model_pusher(model_eval_artifact)
+            # model_pusher_artifact = self.start_model_pusher(model_eval_artifact)
             
             # TrainPipeline.is_pipeline_running=False
             # self.sync_artifact_dir_to_s3()
