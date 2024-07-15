@@ -13,6 +13,9 @@ from news_classification.utils.main_utils import load_object
 from flask import Flask,request,render_template
 import pandas as pd
 import numpy as np
+from news_classification.entity.config_entity import TrainingPipelineConfig, DataIngestionConfig
+from news_classification.pipeline.train_pipeline import TrainPipeline
+
 
 
 app = Flask(__name__)
@@ -90,4 +93,8 @@ def predict_route():
     
 
 if __name__=="__main__":
+    training_pipeline = TrainPipeline()
+    training_pipeline.run_pipeline()
+    
     app.run(host="0.0.0.0", port=5000, debug=True) 
+    
